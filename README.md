@@ -6,7 +6,7 @@ Structure
 ├── README.md
 ├── lib
 │   ├── main.dart
-│   └── src
+│   └── src 
 │       ├── app.dart
 │       ├── helpers
 │       │   ├── add_data.dart
