@@ -11,11 +11,13 @@ Future<List<List<String>>> readDataFromCSV() async {
       String fContent = File(dir + "/data.csv").readAsStringSync();
       List<String> rows = fContent.split("\n");
       rows.removeLast();
+      print(rows);
       List<List<String>> data = new List<List<String>>();
       for (var row in rows) {
         List<String> col = row.split(",");
         data.add(col);
       }
+      print(data);
       return data;
     } catch (e) {
       print(e.toString());

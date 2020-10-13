@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 class ViewDataScreen extends StatelessWidget {
   static const routename = "/view";
   DataRow buildDataRow(List<String> data) {
+    print("from buildDataRow");
+    print(data);
     return DataRow(
       cells: data
           .map<DataCell>(
@@ -13,6 +15,149 @@ class ViewDataScreen extends StatelessWidget {
           )
           .toList(),
     );
+  }
+
+  buildDataColumns() {
+    List columns = <DataColumn>[
+      DataColumn(
+        label: Text(
+          'Name',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Age',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Father\'s Name',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Phone',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Aadhar Card',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Address',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Caste',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Subcaste',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Annual Income',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Origin Date',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Origin Village',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Origin District',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Destination Date',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Destination Village',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Destination District',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Report Date',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Wife Name',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Wife Age',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Son Name',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Son Age',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Daughter Name',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Daughter Age',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Goats',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Sheep',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Cow',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Bull',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Buffaloes',
+        ),
+      ),
+    ];
+    print("columns");
+    print(columns.length);
+    return columns;
   }
 
   @override
@@ -29,65 +174,12 @@ class ViewDataScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
+          print(snapshot.data.length);
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: DataTable(
-              rows: <DataRow>[
-                for (int i = 0; i < snapshot.data.length; i++) buildDataRow(snapshot.data[i]),
-              ],
-              columns: const <DataColumn>[
-                DataColumn(
-                  label: Text(
-                    'Name',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Aadhar Number',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Monthly Income',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Father\'s Name',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'No. of Family Members',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Address',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Origin',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Destination',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Route',
-                  ),
-                ),
-                DataColumn(
-                  label: Text(
-                    'Livestock(max)',
-                  ),
-                ),
-              ],
-            ),
+            child: DataTable(rows: <DataRow>[
+              for (int i = 0; i < snapshot.data.length; i++) buildDataRow(snapshot.data[i]),
+            ], columns: buildDataColumns()),
           );
         },
       ),

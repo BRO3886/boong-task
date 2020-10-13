@@ -1,3 +1,4 @@
+import 'package:boong_task/src/presentation/screens/add_kids.dart';
 import 'package:flutter/material.dart';
 
 import 'presentation/screens/add_data.dart';
@@ -19,7 +20,9 @@ class Boong extends StatelessWidget {
           ),
         ),
       ),
-      home: HomeScreen(),
+      home: AddChildren(
+        number: 6,
+      ),
       routes: {
         AddDataScreen.routename: (context) => AddDataScreen(),
         ViewDataScreen.routename: (context) => ViewDataScreen(),
