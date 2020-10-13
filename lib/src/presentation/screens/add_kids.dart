@@ -1,3 +1,4 @@
+import 'package:boong_task/src/helpers/add_data.dart';
 import 'package:flutter/material.dart';
 
 class AddChildren extends StatefulWidget {
@@ -40,6 +41,7 @@ class _AddChildrenState extends State<AddChildren> {
       TextEditingController anotherController = new TextEditingController();
       ageControllers.add(anotherController);
       ageFields.add(TextFormField(
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: "Child ${i + 1}'s age",
         ),
@@ -72,6 +74,22 @@ class _AddChildrenState extends State<AddChildren> {
     return list;
   }
 
+  String createChildStrings() {
+    String names = "";
+    String ages = "";
+    for (int i = 0; i < widget.number; i++) {
+      names += "${nameControllers[i].text}\t";
+      ages += "${ageControllers[i].text}\t";
+    }
+    names.replaceFirst("\t", "", names.length);
+    ages.replaceFirst("\t", "", ages.length);
+
+    print(names);
+    print(ages);
+
+    return "$names,$ages";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,6 +119,7 @@ class _AddChildrenState extends State<AddChildren> {
                         return;
                       }
                       print("all good");
+                      Navigator.pop<String>(context, createChildStrings());
                     },
                     textColor: Colors.white,
                     child: Text('SUBMIT'),

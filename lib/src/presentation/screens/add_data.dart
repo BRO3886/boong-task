@@ -1,4 +1,5 @@
 import 'package:boong_task/src/helpers/add_data.dart';
+import 'package:boong_task/src/presentation/screens/add_kids.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -36,10 +37,12 @@ class _AddDataScreenState extends State<AddDataScreen> {
   //--family-details----------------------------------------------------
   TextEditingController _wifeName = TextEditingController(text: 'N/A');
   TextEditingController _wifeAge = TextEditingController(text: 'N/A');
-  TextEditingController _sonName = TextEditingController(text: 'N/A');
-  TextEditingController _sonAge = TextEditingController(text: 'N/A');
-  TextEditingController _daughterName = TextEditingController(text: 'N/A');
-  TextEditingController _daughterAge = TextEditingController(text: 'N/A');
+  TextEditingController _numberOfSons = TextEditingController();
+  TextEditingController _numberOfDaughters = TextEditingController();
+  // TextEditingController _sonName = TextEditingController(text: 'N/A');
+  // TextEditingController _sonAge = TextEditingController(text: 'N/A');
+  // TextEditingController _daughterName = TextEditingController(text: 'N/A');
+  // TextEditingController _daughterAge = TextEditingController(text: 'N/A');
   //--------------------------------------------------------------------
 
   //--livestock---------------------------------------------------------
@@ -55,6 +58,9 @@ class _AddDataScreenState extends State<AddDataScreen> {
   DateTime originDate;
   DateTime destDate;
   DateTime report;
+
+  String sonData;
+  String daughterData;
 
   var format = DateFormat.yMd();
 
@@ -74,6 +80,39 @@ class _AddDataScreenState extends State<AddDataScreen> {
 
   goTo(int step) {
     setState(() => currentStep = step);
+  }
+
+  addData() async {
+    String csvString =
+        "${_name.text},${_age.text},${_father.text},${_mob.text},${_aadhar.text},${_address.text},${_caste.text},${_subcaste.text},$incomeValue,${format.format(originDate)},${_originVillage.text},${_originDistrict.text},${format.format(destDate)},${_destinationVillage.text},${_destinationDistrict.text},${format.format(report)},${_wifeName.text},${_wifeAge.text},";
+    if (int.parse(_numberOfSons.text) == 0) {
+      csvString += "${_numberOfSons.text},N/A,N/A,";
+    } else {
+      csvString += "${_numberOfSons.text},$sonData,";
+    }
+    if (int.parse(_numberOfDaughters.text) == 0) {
+      csvString += "${_numberOfDaughters.text},N/A,N/A,";
+    } else {
+      csvString += "${_numberOfDaughters.text},$daughterData,";
+    }
+    csvString += "${_goat.text},${_sheep.text},${_cow.text},${_bull.text},${_buffalo.text}";
+    print(csvString);
+    bool done = await addDataToCSV(csvString);
+    SnackBar snackBar;
+    if (!done) {
+      snackBar = SnackBar(
+        content: Text('Unable to write to file'),
+        backgroundColor: Colors.redAccent,
+        behavior: SnackBarBehavior.floating,
+      );
+    } else {
+      snackBar = SnackBar(
+        content: Text('Data written to file'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+      );
+    }
+    _scaffoldkey.currentState.showSnackBar(snackBar);
   }
 
   @override
@@ -98,26 +137,22 @@ class _AddDataScreenState extends State<AddDataScreen> {
               );
               _scaffoldkey.currentState.showSnackBar(snackBar);
               return;
-            }
-            final csvString =
-                "${_name.text},${_age.text},${_father.text},${_mob.text},${_aadhar.text},${_address.text},${_caste.text},${_subcaste.text},$incomeValue,${format.format(originDate)},${_originVillage.text},${_originDistrict.text},${format.format(destDate)},${_destinationVillage.text},${_destinationDistrict.text},${format.format(report)},${_wifeName.text},${_wifeAge.text},${_sonName.text},${_sonAge.text},${_daughterName.text},${_daughterAge.text},${_goat.text},${_sheep.text},${_cow.text},${_bull.text},${_buffalo.text}";
-            print(csvString);
-            bool done = await addDataToCSV(csvString);
-            SnackBar snackBar;
-            if (!done) {
-              snackBar = SnackBar(
-                content: Text('Unable to write to file'),
+            } else if (int.parse(_numberOfSons.text) != 0 && sonData.isEmpty) {
+              SnackBar snackBar = SnackBar(
+                content: Text('Son(s) data not provided'),
                 backgroundColor: Colors.redAccent,
                 behavior: SnackBarBehavior.floating,
               );
-            } else {
-              snackBar = SnackBar(
-                content: Text('Data written to file'),
-                backgroundColor: Colors.green,
+              _scaffoldkey.currentState.showSnackBar(snackBar);
+            } else if (int.parse(_numberOfDaughters.text) != 0 && daughterData.isEmpty) {
+              SnackBar snackBar = SnackBar(
+                content: Text('Daughter(s) data not provided'),
+                backgroundColor: Colors.redAccent,
                 behavior: SnackBarBehavior.floating,
               );
+              _scaffoldkey.currentState.showSnackBar(snackBar);
             }
-            _scaffoldkey.currentState.showSnackBar(snackBar);
+            addData();
           },
           child: Text('SUBMIT'),
         ),
@@ -576,7 +611,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                             height: 32,
                           ),
                           Text(
-                            'SON',
+                            'SONS',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -586,13 +621,48 @@ class _AddDataScreenState extends State<AddDataScreen> {
                             height: 8,
                           ),
                           TextFormField(
-                            controller: _sonName,
-                            keyboardType: TextInputType.name,
+                            controller: _numberOfSons,
+                            keyboardType: TextInputType.number,
                             enableInteractiveSelection: true,
                             enableSuggestions: true,
-                            autofillHints: [AutofillHints.name],
+                            textAlignVertical: TextAlignVertical.top,
                             decoration: InputDecoration(
-                              labelText: 'Name',
+                              labelText: 'Number of Sons',
+                              contentPadding: EdgeInsets.all(8),
+                              suffix: FlatButton(
+                                visualDensity: VisualDensity.compact,
+                                child: Text('NEXT'),
+                                onPressed: () async {
+                                  if (int.parse(_numberOfSons.text) < 0 ||
+                                      int.parse(_numberOfSons.text) > 20) {
+                                    _scaffoldkey.currentState.showSnackBar(SnackBar(
+                                      content: Text('Please Enter Sensible Value'),
+                                      backgroundColor: Colors.redAccent,
+                                      behavior: SnackBarBehavior.floating,
+                                    ));
+                                  } else {
+                                    sonData =
+                                        await Navigator.of(context).push<String>(MaterialPageRoute(
+                                      builder: (context) => AddChildren(
+                                        number: int.parse(_numberOfSons.text),
+                                      ),
+                                    ));
+                                    if (sonData == null) {
+                                      _scaffoldkey.currentState.showSnackBar(SnackBar(
+                                        content: Text('Please provide children data'),
+                                        // backgroundColor: Colors.redAccent,
+                                        behavior: SnackBarBehavior.floating,
+                                      ));
+                                    } else {
+                                      _scaffoldkey.currentState.showSnackBar(SnackBar(
+                                        content: Text('Data saved temporarily'),
+                                        behavior: SnackBarBehavior.floating,
+                                      ));
+                                      print(sonData);
+                                    }
+                                  }
+                                },
+                              ),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {
@@ -605,29 +675,9 @@ class _AddDataScreenState extends State<AddDataScreen> {
                           ),
                           SizedBox(
                             height: 16,
-                          ),
-                          TextFormField(
-                            controller: _sonAge,
-                            keyboardType: TextInputType.number,
-                            enableInteractiveSelection: true,
-                            enableSuggestions: true,
-                            decoration: InputDecoration(
-                              labelText: 'Age',
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "This field is required";
-                              }
-                              if (value.contains(",")) {
-                                return "invalid input";
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 32,
                           ),
                           Text(
-                            'DAUGHTER',
+                            'DAUGHTERS',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -637,33 +687,48 @@ class _AddDataScreenState extends State<AddDataScreen> {
                             height: 8,
                           ),
                           TextFormField(
-                            controller: _daughterName,
-                            keyboardType: TextInputType.name,
-                            enableInteractiveSelection: true,
-                            enableSuggestions: true,
-                            autofillHints: [AutofillHints.name],
-                            decoration: InputDecoration(
-                              labelText: 'Name',
-                            ),
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return "This field is required";
-                              }
-                              if (value.contains(",")) {
-                                return "invalid input";
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          TextFormField(
-                            controller: _daughterAge,
+                            controller: _numberOfDaughters,
                             keyboardType: TextInputType.number,
                             enableInteractiveSelection: true,
                             enableSuggestions: true,
+                            textAlignVertical: TextAlignVertical.top,
                             decoration: InputDecoration(
-                              labelText: 'Age',
+                              labelText: 'Number of Daughters',
+                              contentPadding: EdgeInsets.all(8),
+                              suffix: FlatButton(
+                                visualDensity: VisualDensity.compact,
+                                child: Text('NEXT'),
+                                onPressed: () async {
+                                  if (int.parse(_numberOfDaughters.text) < 0 ||
+                                      int.parse(_numberOfDaughters.text) > 20) {
+                                    _scaffoldkey.currentState.showSnackBar(SnackBar(
+                                      content: Text('Please Enter Sensible Value'),
+                                      backgroundColor: Colors.redAccent,
+                                      behavior: SnackBarBehavior.floating,
+                                    ));
+                                  } else {
+                                    daughterData =
+                                        await Navigator.of(context).push<String>(MaterialPageRoute(
+                                      builder: (context) => AddChildren(
+                                        number: int.parse(_numberOfDaughters.text),
+                                      ),
+                                    ));
+                                    if (daughterData == null) {
+                                      _scaffoldkey.currentState.showSnackBar(SnackBar(
+                                        content: Text('Please provide children data'),
+                                        // backgroundColor: Colors.redAccent,
+                                        behavior: SnackBarBehavior.floating,
+                                      ));
+                                    } else {
+                                      _scaffoldkey.currentState.showSnackBar(SnackBar(
+                                        content: Text('Data saved temporarily'),
+                                        behavior: SnackBarBehavior.floating,
+                                      ));
+                                      print(daughterData);
+                                    }
+                                  }
+                                },
+                              ),
                             ),
                             validator: (value) {
                               if (value.isEmpty) {

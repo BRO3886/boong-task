@@ -20,9 +20,7 @@ class Boong extends StatelessWidget {
           ),
         ),
       ),
-      home: AddChildren(
-        number: 6,
-      ),
+      home: HomeScreen(),
       routes: {
         AddDataScreen.routename: (context) => AddDataScreen(),
         ViewDataScreen.routename: (context) => ViewDataScreen(),

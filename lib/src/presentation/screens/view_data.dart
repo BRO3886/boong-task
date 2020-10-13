@@ -111,22 +111,32 @@ class ViewDataScreen extends StatelessWidget {
       ),
       DataColumn(
         label: Text(
-          'Son Name',
+          'Number of Sons',
         ),
       ),
       DataColumn(
         label: Text(
-          'Son Age',
+          'Names',
         ),
       ),
       DataColumn(
         label: Text(
-          'Daughter Name',
+          'Ages',
         ),
       ),
       DataColumn(
         label: Text(
-          'Daughter Age',
+          'Number of Daughters',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Names',
+        ),
+      ),
+      DataColumn(
+        label: Text(
+          'Ages',
         ),
       ),
       DataColumn(
